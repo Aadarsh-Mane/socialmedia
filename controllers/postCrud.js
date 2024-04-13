@@ -1,6 +1,6 @@
 import multer from "multer";
 import postsModel from "../models/posts.js";
-import user from "../models/user.js";
+import userModel from "../models/user.js";
 
 export const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -25,7 +25,7 @@ export const createPost=async(req,res)=>{
         image: req.file ? req.file.path : null // Store image path if uploaded
 
     })
-
+ 
 
     try {
         await newPost.save();
