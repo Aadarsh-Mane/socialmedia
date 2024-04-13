@@ -1,6 +1,8 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv';
+import userRouter from './routes/userRoutes.js';
+import postRouter from './routes/postRoutes.js';
 dotenv.config(); // Load environment variables from .env file
 
 const PORT = process.env.PORT || 5000; // Use PORT environment variable or default to 5000
@@ -10,9 +12,11 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send("welcome to blog/post api")
-    // res.send(quotes)
-    // res.send("hello")
+    
 });
+app.use('/users',userRouter)
+app.use('/posts',postRouter)
+
 
 mongoose.connect(DATABASE_URL).then(()=>{
         app.listen(PORT, ()=>{
