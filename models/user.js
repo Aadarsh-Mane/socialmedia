@@ -30,6 +30,14 @@ const UserSchema =mongoose.Schema({
     profileImage: {
         type: String, // Store the image URL
       },
+      followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    following: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 },{timestamps:true})
 
 

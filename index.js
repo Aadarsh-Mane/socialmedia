@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv';
 import userRouter from './routes/userRoutes.js';
 import postRouter from './routes/postRoutes.js';
+import relationRoute from './routes/userRelationRoute.js';
 dotenv.config(); // Load environment variables from .env file
 
 const PORT = process.env.PORT || 5000; // Use PORT environment variable or default to 5000
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
 });
 app.use('/users',userRouter)
 app.use('/posts',postRouter)
+app.use('/connect',relationRoute)
 
 
 mongoose.connect(DATABASE_URL).then(()=>{
