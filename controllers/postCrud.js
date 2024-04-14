@@ -82,12 +82,14 @@ export const deletePost = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   };
-export const getPosts=async(req,res)=>{
+export const getPosts = async (req, res) => {
     try {
-        const notes=await noteModel.find({userId:req.userId})
-        res.status(200).json(notes)
+        // Assuming 'UserModel' is your user schema, adjust as necessary
+        const posts = await postsModel.find({status:"public"}).populate('userId', 'username');
+        const totalPosts = posts.length;
+        res.status(200).json({ posts: posts, totalPosts: totalPosts });
     } catch (error) {
-        
+        res.status(500).json({ message: "Something went wrong" });
     }
+};
 
-}

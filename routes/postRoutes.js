@@ -5,7 +5,7 @@ import { createPost, deletePost, getPosts, updatePost, upload } from '../control
 const postRouter=express.Router()
 
 
-postRouter.get("/",auth,getPosts)
+postRouter.get("/",getPosts)
 postRouter.post("/add",auth,upload.single('image'),createPost)
 postRouter.put("/update/:id",auth,upload.single('image'),updatePost)
 postRouter.delete("/:id",auth,deletePost)
