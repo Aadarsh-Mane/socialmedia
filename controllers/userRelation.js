@@ -80,3 +80,53 @@ export const fetchPosts = async(req, res) => {
   }
 };
 
+export const commentOnPost = async (req, res) => {
+  try {
+      const { followedId } = req.params;
+      const  userId = req.userId; // Assuming you have user ID and username in the request object
+      const { content } = req.body;
+
+      // Find the post by ID
+      const post = await postsModel.findById(followedId);
+      console.log(post);
+      if (!post) {
+          return res.status(404).json({ message: 'Post not found' });
+      }
+
+      // Check if the user can comment on the post
+      if (post.status === 'private') {
+          const postAuthor = await User.findById(post.userId);
+          if (!postAuthor) {
+              return res.status(404).json({ message: 'Post author not found' });
+          }
+
+          const user = await User.findById(userId);
+          if (!user) {
+              return res.status(404).json({ message: 'User not found' });
+          }
+
+          // Check if the user is following the post author
+          const isFollowing = postAuthor.followers.includes(userId);
+
+          if (!post.userId.equals(userId) && !isFollowing) {
+              return res.status(403).json({ message: 'You are not authorized to comment on this post' });
+          }
+      }
+
+      // Create a new comment
+      const comment = {
+          content,
+          userId,
+          
+      };
+
+      // Push the comment to the post's comments array
+      post.comments.push(comment);
+      await post.save();
+
+      return res.status(201).json({ message: 'Comment added successfully', comment });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Server Error' });
+  }
+};

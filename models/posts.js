@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import CommentSchema from './comment.js';
 // import CommentSchema from './comment.js';
 
 
@@ -28,7 +29,7 @@ const PostsSchema =mongoose.Schema({
     image: {
         type: String // Path to the uploaded image
       },
-    // comments: [CommentSchema] // Array of comments
+    comments: [CommentSchema] // Array of comments
 
 },{timestamps:true})
 
