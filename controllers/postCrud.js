@@ -92,4 +92,18 @@ export const getPosts = async (req, res) => {
         res.status(500).json({ message: "Something went wrong" });
     }
 };
+export const getAllTags = async (req, res) => {
+  try {
+      const posts = await postsModel.find({}, { tags: 1 }); // Query to get only the 'tags' field of all posts
+      let allTags = [];
+      posts.forEach(post => {
+          allTags = allTags.concat(post.tags); // Concatenate all tags from all posts
+      });
+      const uniqueTags = [...new Set(allTags)]; // Get unique tags
+      res.status(200).json({ tags: uniqueTags }); // Send unique tags in response
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
