@@ -68,11 +68,15 @@ export const createPost = async (req, res) => {
 // };
 export const updatePost = async (req, res) => {
   const id = req.params.id;
-  const { title, description, tags, status } = req.body;
+  const { title, description, tags, status, check } = req.body;
   const userId = req.userId; // Extract the authenticated user ID
 
   try {
-    const note = await postsModel.findOne({ _id: id, userId: userId });
+    const note = await postsModel.findOne({
+      _id: id,
+      userId: userId,
+      title: check,
+    });
 
     if (!note) {
       return res
@@ -138,9 +142,13 @@ export const getPosts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 2;
     const skip = (page - 1) * limit;
-
+    const tags = req.query.tags ? req.query.tags.split(",") : [];
+    const query = { status: "public" };
+    if (tags.length > 0) {
+      query.tags = { $in: tags };
+    }
     const posts = await postsModel
-      .find({ status: "public" })
+      .find(query)
       .populate("userId", "username") // Populate userId with the username field from User
       .skip(skip)
       .limit(limit);
