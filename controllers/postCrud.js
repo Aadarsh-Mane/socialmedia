@@ -139,13 +139,13 @@ export const deletePost = async (req, res) => {
 // };
 export const getPosts = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 2;
+    const page = parseInt(req.query.page) || 1; //default set to 1
+    const limit = parseInt(req.query.limit) || 2; //default set to 2
     const skip = (page - 1) * limit;
     const tags = req.query.tags ? req.query.tags.split(",") : [];
     const query = { status: "public" };
     if (tags.length > 0) {
-      query.tags = { $in: tags };
+      query.tags = { $in: tags }; //$all to fetch all included tags
     }
     const posts = await postsModel
       .find(query)
