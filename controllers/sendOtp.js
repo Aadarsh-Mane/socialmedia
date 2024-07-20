@@ -8,21 +8,31 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const myphoneNumber = process.env.TWILIO_PHONE_NUMBER;
 const twilioClient = new twilio(accountSid, authToken);
 
-export const sendOtp = async () => {
+export const sendOtp = async (req, res) => {
   try {
+    const id = req.userId;
+    console.log(id);
     const { phoneNumber } = req.body;
-    const cDate = new Date();
-    await otpSchema.findOneAndUpdate(
-      { phoneNumber },
-      { otp, otpExpiration: new Date(cDate.getTime()) },
-      { upsert: true, new: true, setDefaultOnInsert: true }
-    );
+
     const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       specialChars: false,
       lowerCaseAlphabets: false,
     });
-    await twilioClient.message.create({
+    const cDate = new Date();
+    const myotp = new otpSchema({
+      phoneNumber: phoneNumber,
+      otp: otp,
+      otpExpiration: new Date(cDate.getTime()),
+      userId: id,
+    });
+    await myotp.save();
+    // await otpSchema.findOneAndUpdate(
+    //   { phoneNumber },
+    //   { otp, otpExpiration: new Date(cDate.getTime()) },
+    //   { upsert: true, new: true, setDefaultOnInsert: true }
+    // );
+    await twilioClient.messages.create({
       body: `your otp is:${otp} `,
       to: phoneNumber,
       from: myphoneNumber,
