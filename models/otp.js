@@ -12,8 +12,8 @@ const otpSchema = mongoose.Schema({
   otpExpiration: {
     type: Date,
     default: Date.now,
-    get: (otpExpiration) => {
-      otpExpiration.getTime();
-    },
+    get: (otpExpiration) => otpExpiration.getTime(),
+    set: (otpExpiration) => new Date(otpExpiration),
   },
 });
+export default mongoose.model("Otp", otpSchema);

@@ -5,6 +5,7 @@ import userRouter from "./routes/userRoutes.js";
 import postRouter from "./routes/postRoutes.js";
 import relationRoute from "./routes/userRelationRoute.js";
 import { predict } from "./check.js";
+import { sendOtp } from "./controllers/sendOtp.js";
 dotenv.config(); // Load environment variables from .env file
 
 const PORT = process.env.PORT || 5000; // Use PORT environment variable or default to 5000
@@ -18,15 +19,16 @@ app.get("/", (req, res) => {
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/connect", relationRoute);
-app.post("/predict", (req, res) => {
-  try {
-    const diamondAttributes = req.body; // Expecting JSON input with diamond attributes
-    const predictedPrice = predict(diamondAttributes);
-    res.json({ predictedPrice });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+app.get("/", sendOtp);
+// app.post("/predict", (req, res) => {
+//   try {
+//     const diamondAttributes = req.body; // Expecting JSON input with diamond attributes
+//     const predictedPrice = predict(diamondAttributes);
+//     res.json({ predictedPrice });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 mongoose.connect(DATABASE_URL).then(() => {
   app.listen(PORT, () => {
